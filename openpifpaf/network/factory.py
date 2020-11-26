@@ -119,7 +119,6 @@ def factory(
         download_progress=True,
         head_consolidation='filter_and_extend',
 ) -> Tuple[nets.Shell, int]:
-
     if base_name:
         assert head_metas
         assert checkpoint is None
@@ -154,6 +153,7 @@ def factory(
 
         net_cpu: nets.Shell = checkpoint['model']
         epoch = checkpoint['epoch']
+        LOG.info('checkpoint has %s epochs', epoch)
 
         # normalize for backwards compatibility
         nets.model_migration(net_cpu)
@@ -177,12 +177,20 @@ def factory(
             net_cpu.set_head_nets(headnets)
         elif head_metas is not None and head_consolidation == 'filter_and_extend':
             LOG.info('filtering for dataset heads and extending existing heads')
+
+            for hn in net_cpu.head_nets:
+                hn.meta.dataset = 'voc2012'
+
             existing_headnets = {(hn.meta.dataset, hn.meta.name): hn
                                  for hn in net_cpu.head_nets}
+
+            print(existing_headnets)
+            print(head_metas)
             headnets = []
             for meta_i, meta in enumerate(head_metas):
                 if (meta.dataset, meta.name) in existing_headnets:
                     hn = existing_headnets[(meta.dataset, meta.name)]
+                    print('matched', hn)
                     headnets.append(hn)
                     # Match head metas by name and overwrite with meta from checkpoint.
                     # This makes sure that the head metas have their head_index and

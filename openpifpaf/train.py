@@ -158,6 +158,5 @@ def main():
     )
     trainer.loop(train_loader, val_loader, args.epochs, start_epoch=start_epoch)
 
-
 if __name__ == '__main__':
     main()
