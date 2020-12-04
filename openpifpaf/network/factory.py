@@ -185,14 +185,16 @@ def factory(
             for meta_i, meta in enumerate(head_metas):
                 if (meta.dataset, meta.name) in existing_headnets:
                     hn = existing_headnets[(meta.dataset, meta.name)]
+                    LOG.debug('matched existing head %s', hn)
                     headnets.append(hn)
                     # Match head metas by name and overwrite with meta from checkpoint.
                     # This makes sure that the head metas have their head_index and
                     # base_stride attributes set.
                     head_metas[meta_i] = hn.meta
                 else:
-                    headnets.append(
-                        HEAD_FACTORIES[meta.__class__](meta, net_cpu.base_net.out_features))
+                    hn = HEAD_FACTORIES[meta.__class__](meta, net_cpu.base_net.out_features)
+                    LOG.debug('creating new head %s', hn)
+                    headnets.append(hn)
             net_cpu.set_head_nets(headnets)
         elif head_metas is not None:
             raise Exception('head strategy {} unknown'.format(head_consolidation))
