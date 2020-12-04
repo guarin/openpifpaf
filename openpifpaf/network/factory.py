@@ -79,6 +79,7 @@ def factory_from_args(args, *, head_metas=None):
         two_scale=args.two_scale,
         download_progress=args.download_progress,
         head_consolidation=args.head_consolidation,
+        head_rename=args.head_rename
     )
 
 
@@ -117,6 +118,7 @@ def factory(
         two_scale=False,
         download_progress=True,
         head_consolidation='filter_and_extend',
+        head_rename=[]
 ) -> Tuple[nets.Shell, int]:
     if base_name:
         assert head_metas
@@ -156,6 +158,8 @@ def factory(
 
         # normalize for backwards compatibility
         nets.model_migration(net_cpu)
+
+        rename_heads(net_cpu, head_rename)
 
         if head_metas is not None and head_consolidation == 'keep':
             LOG.info('keeping heads from loaded checkpoint')
@@ -209,6 +213,30 @@ def factory(
 
     return net_cpu, epoch
 
+def rename_heads(net_cpu, head_rename):
+    if head_rename:
+        LOG.info('renaming heads')
+    renames = {}
+    for rename in head_rename:
+        if ':' in rename:
+            old, new = rename.split(':')
+            renames[old] = new
+        else:
+            LOG.warning("invalid --head-rename argument: %s", rename)
+
+    for hn in net_cpu.head_nets:
+        old_name = f"{hn.meta.dataset}.{hn.meta.name}"
+        new_name = renames.get(old_name, None)
+        if not new_name:
+            new_name = renames.get(hn.meta.dataset, None)
+        if new_name:
+            parts = new_name.split('.')
+            hn.meta.dataset = parts[0]
+            if len(parts) > 1:
+                hn.meta.name = parts[1]
+                LOG.info('renamed head from %s to %s', old_name, '.'.join(parts[:2]))
+            else:
+                LOG.info('renamed head from %s to %s', old_name, f"{new_name}.{hn.meta.name}")
 
 def factory_from_scratch(basename, head_metas) -> nets.Shell:
     if basename not in BASE_FACTORIES:
@@ -261,3 +289,6 @@ def cli(parser):
                        default='filter_and_extend',
                        help=('consolidation strategy for a checkpoint\'s head '
                              'networks and the heads specified by the datamodule'))
+    group.add_argument('--head-rename', nargs="+", default=[], help=("rename heads when loading, specify as oldname:newname"
+                                                                     "example: cocokp.cif:cocodet.cif"
+                                                                     "to rename all heads for a dataset use: cocokp:cocodet"))
