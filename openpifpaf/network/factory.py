@@ -234,9 +234,9 @@ def rename_heads(net_cpu, head_rename):
             hn.meta.dataset = parts[0]
             if len(parts) > 1:
                 hn.meta.name = parts[1]
-                LOG.info('renamed head from %s to %s', old_name, '.'.join(parts[:2]))
+                LOG.info('renaming head from %s to %s', old_name, '.'.join(parts[:2]))
             else:
-                LOG.info('renamed head from %s to %s', old_name, f"{new_name}.{hn.meta.name}")
+                LOG.info('renaming head from %s to %s', old_name, f"{new_name}.{hn.meta.name}")
 
 def factory_from_scratch(basename, head_metas) -> nets.Shell:
     if basename not in BASE_FACTORIES:
