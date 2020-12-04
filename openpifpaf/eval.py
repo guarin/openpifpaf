@@ -179,7 +179,7 @@ def evaluate(args):
 
                 with show.image_canvas(cpu_image) as ax:
                     if args.show_final_ground_truth:
-                        annotation_painter.annotations(ax, gt_anns, color='grey')
+                        annotation_painter.ground_truth_annotations(ax, gt_anns, color='grey')
                     annotation_painter.annotations(ax, pred)
 
     total_time = time.time() - total_start

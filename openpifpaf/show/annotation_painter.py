@@ -20,6 +20,10 @@ class AnnotationPainter:
             for annotation_type, painter in painters.items():
                 self.painters[annotation_type] = painter
 
+    def ground_truth_annotations(self, ax, annotations, *,
+                    color=None, colors=None, texts=None, subtexts=None):
+        self.annotations(ax, annotations, color=color, colors=colors, texts=texts, subtexts=subtexts)
+
     def annotations(self, ax, annotations, *,
                     color=None, colors=None, texts=None, subtexts=None):
         by_classname = defaultdict(list)
