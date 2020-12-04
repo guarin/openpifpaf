@@ -181,6 +181,7 @@ def evaluate(args):
                     if args.show_final_ground_truth:
                         annotation_painter.ground_truth_annotations(ax, gt_anns, color='grey')
                     annotation_painter.annotations(ax, pred)
+                    annotation_painter.paint(ax)
 
     total_time = time.time() - total_start
 

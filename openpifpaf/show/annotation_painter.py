@@ -56,8 +56,8 @@ class AnnotationPainter:
                 ax, anns,
                 color=color, colors=this_colors, texts=this_texts, subtexts=this_subtexts)
 
-    def paint(self):
+    def paint(self, ax):
         if self.painters:
             for painter in self.painters:
                 if hasattr(painter, 'paint'):
-                    painter.paint()
+                    painter.paint(ax)
