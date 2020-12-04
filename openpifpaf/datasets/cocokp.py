@@ -151,6 +151,8 @@ class CocoKp(DataModule):
         cls.val_annotations = args.cocokp_val_annotations
         cls.train_image_dir = args.cocokp_train_image_dir
         cls.val_image_dir = args.cocokp_val_image_dir
+        cls.eval_annotations = cls.val_annotations
+        cls.eval_image_dir = cls.val_image_dir
 
         cls.square_edge = args.cocokp_square_edge
         cls.extended_scale = args.cocokp_extended_scale
