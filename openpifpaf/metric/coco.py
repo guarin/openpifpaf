@@ -5,6 +5,7 @@ import zipfile
 import numpy as np
 
 from .base import Base
+from ..annotation import Annotation
 
 try:
     import pycocotools.coco
@@ -99,6 +100,7 @@ class Coco(Base):
 
     # pylint: disable=unused-argument
     def accumulate(self, predictions, image_meta, *, ground_truth=None):
+        predictions = [p for p in predictions if isinstance(p, Annotation)]
         image_id = int(image_meta['image_id'])
         self.image_ids.append(image_id)
 
