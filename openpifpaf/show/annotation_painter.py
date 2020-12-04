@@ -33,12 +33,10 @@ class AnnotationPainter:
             this_subtexts = [subtexts[i] for i, _ in i_anns] if subtexts else None
             painter = self.painters[classname]
             if hasattr(painter, 'ground_truth_annotations'):
-                self.painters[classname].ground_truth_annotations(
-                    ax, anns,
+                painter.ground_truth_annotations(ax, anns,
                     color=color, colors=this_colors, texts=this_texts, subtexts=this_subtexts)
             else:
-                self.painters[classname].annotations(
-                ax, anns,
+                painter.annotations(ax, anns,
                 color=color, colors=this_colors, texts=this_texts, subtexts=this_subtexts)
 
     def annotations(self, ax, annotations, *,
@@ -58,6 +56,6 @@ class AnnotationPainter:
 
     def paint(self, ax):
         if self.painters:
-            for painter in self.painters:
+            for painter in self.painters.values():
                 if hasattr(painter, 'paint'):
                     painter.paint(ax)
