@@ -79,7 +79,9 @@ def factory_from_args(args, *, head_metas=None):
         two_scale=args.two_scale,
         download_progress=args.download_progress,
         head_consolidation=args.head_consolidation,
-        head_rename=args.head_rename
+        head_rename=args.head_rename,
+        freeze_basenet=args.freeze_basenet,
+        freeze_head=args.freeze_head
     )
 
 
@@ -118,8 +120,12 @@ def factory(
         two_scale=False,
         download_progress=True,
         head_consolidation='filter_and_extend',
-        head_rename=[]
+        head_rename=None,
+        freeze_basenet=False,
+        freeze_head=None
 ) -> Tuple[nets.Shell, int]:
+    head_rename = head_rename if head_rename else []
+    freeze_head = freeze_head if freeze_head else []
     if base_name:
         assert head_metas
         assert checkpoint is None
@@ -202,6 +208,13 @@ def factory(
         elif head_metas is not None:
             raise Exception('head strategy {} unknown'.format(head_consolidation))
 
+        if freeze_basenet:
+            LOG.info("freezing basenet parameters")
+            for param in net_cpu.base_net.parameters():
+                param.requires_grad = False
+
+        freeze_heads(net_cpu, freeze_head)
+
         # initialize for eval
         net_cpu.eval()
 
@@ -212,6 +225,14 @@ def factory(
         net_cpu = nets.Shell2Scale(net_cpu.base_net, net_cpu.head_nets)
 
     return net_cpu, epoch
+
+def freeze_heads(net_cpu, head_names):
+    for hn in net_cpu.head_nets:
+        name = f"{hn.meta.dataset}.{hn.meta.name}"
+        if name in head_names:
+            LOG.info(f'freezing {name} parameters')
+            for param in hn.parameters():
+                param.requires_grad = False
 
 def rename_heads(net_cpu, head_rename):
     if head_rename:
@@ -289,6 +310,15 @@ def cli(parser):
                        default='filter_and_extend',
                        help=('consolidation strategy for a checkpoint\'s head '
                              'networks and the heads specified by the datamodule'))
-    group.add_argument('--head-rename', nargs="+", default=[], help=("rename heads when loading, specify as oldname:newname"
-                                                                     "example: cocokp.cif:cocodet.cif"
-                                                                     "to rename all heads for a dataset use: cocokp:cocodet"))
+    group.add_argument('--head-rename',
+                       nargs="+",
+                       default=[],
+                       help=("rename heads when loading, specify as oldname:newname"
+                             "example: cocokp.cif:cocodet.cif"
+                             "to rename all heads for a dataset use: cocokp:cocodet"))
+    group.add_argument('--freeze-basenet', default=False, action='store_true', help="freeze basenet parameters")
+    group.add_argument('--freeze-head',
+                       nargs="+",
+                       default=[],
+                       help=("freeze head parameters, head names are specified as dataset.head"
+                             "example: cocokp.cif"))
