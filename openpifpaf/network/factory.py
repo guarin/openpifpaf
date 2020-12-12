@@ -80,6 +80,7 @@ def factory_from_args(args, *, head_metas=None):
         download_progress=args.download_progress,
         head_consolidation=args.head_consolidation,
         head_rename=args.head_rename,
+        unfreeze=args.unfreeze,
         freeze_basenet=args.freeze_basenet,
         freeze_head=args.freeze_head
     )
@@ -121,6 +122,7 @@ def factory(
         download_progress=True,
         head_consolidation='filter_and_extend',
         head_rename=None,
+        unfreeze=False,
         freeze_basenet=False,
         freeze_head=None
 ) -> Tuple[nets.Shell, int]:
@@ -207,6 +209,15 @@ def factory(
             net_cpu.set_head_nets(headnets)
         elif head_metas is not None:
             raise Exception('head strategy {} unknown'.format(head_consolidation))
+
+        if unfreeze:
+            LOG.info('unfreezing network parameters')
+            for param in net_cpu.base_net.parameters():
+                param.requires_grad = True
+
+            for hn in net_cpu.head_nets:
+                for param in hn.parameters():
+                    param.requires_grad = True
 
         if freeze_basenet:
             LOG.info("freezing basenet parameters")
@@ -322,3 +333,4 @@ def cli(parser):
                        default=[],
                        help=("freeze head parameters, head names are specified as dataset.head"
                              "example: cocokp.cif"))
+    group.add_argument('--unfreeze', default=False, action='store_true', help='unfreezes all network parameters')
