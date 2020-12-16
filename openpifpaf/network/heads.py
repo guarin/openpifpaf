@@ -276,9 +276,9 @@ class DeepCompositeField3(HeadNetwork):
         # convolution
         out_features = meta.n_fields * (meta.n_confidences + meta.n_vectors * 3 + meta.n_scales)
 
-        self.conv1 = torch.nn.Conv2(in_features, in_features)
-        self.conv2 = torch.nn.Conv2(in_features, in_features)
-        self.conv3 = torch.nn.Conv2(in_features, in_features)
+        self.conv1 = torch.nn.Conv2d(in_features, in_features, 1)
+        self.conv2 = torch.nn.Conv2d(in_features, in_features, 1)
+        # self.conv3 = torch.nn.Conv2d(in_features, in_features, 1)
 
         self.conv = torch.nn.Conv2d(in_features, out_features * (meta.upsample_stride ** 2),
                                     kernel_size, padding=padding, dilation=dilation)
@@ -312,7 +312,7 @@ class DeepCompositeField3(HeadNetwork):
     def forward(self, x):  # pylint: disable=arguments-differ
         x = self.conv1(x)
         x = self.conv2(x)
-        x = self.conv3(x)
+        # x = self.conv3(x)
         x = self.dropout(x)
         x = self.conv(x)
         # upscale
