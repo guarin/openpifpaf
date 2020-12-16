@@ -276,9 +276,16 @@ class DeepCompositeField3(HeadNetwork):
         # convolution
         out_features = meta.n_fields * (meta.n_confidences + meta.n_vectors * 3 + meta.n_scales)
 
-        self.conv1 = torch.nn.Conv2d(in_features, in_features, 1)
-        self.conv2 = torch.nn.Conv2d(in_features, in_features, 1)
-        # self.conv3 = torch.nn.Conv2d(in_features, in_features, 1)
+        self.conv1 = torch.nn.Sequential(
+            torch.nn.Conv2d(in_features, in_features, 1),
+            torch.nn.BatchNorm2d(in_features),
+            torch.nn.ReLU(inplace=True),
+        )
+        self.conv2 = torch.nn.Sequential(
+            torch.nn.Conv2d(in_features, in_features, 1),
+            torch.nn.BatchNorm2d(in_features),
+            torch.nn.ReLU(inplace=True),
+        )
 
         self.conv = torch.nn.Conv2d(in_features, out_features * (meta.upsample_stride ** 2),
                                     kernel_size, padding=padding, dilation=dilation)
