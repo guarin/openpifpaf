@@ -259,6 +259,7 @@ class CompositeField3(HeadNetwork):
 class DeepCompositeField3(HeadNetwork):
     dropout_p = 0.0
     inplace_ops = True
+    conf_layers = 0
 
     def __init__(self,
                  meta: headmeta.Base,
@@ -276,20 +277,17 @@ class DeepCompositeField3(HeadNetwork):
         # convolution
         out_features = meta.n_fields * (meta.n_confidences + meta.n_vectors * 3 + meta.n_scales)
 
-        self.conv1 = torch.nn.Sequential(
-            torch.nn.Conv2d(in_features, in_features, 1),
-            torch.nn.BatchNorm2d(in_features),
-            torch.nn.ReLU(inplace=True),
-        )
-        self.conv2 = torch.nn.Sequential(
-            torch.nn.Conv2d(in_features, in_features, 1),
-            torch.nn.BatchNorm2d(in_features),
-            torch.nn.ReLU(inplace=True),
+        self.convs = torch.nn.Sequential(
+            *[torch.nn.Sequential(
+                torch.nn.Conv2d(in_features, in_features, 1),
+                torch.nn.BatchNorm2d(in_features),
+                torch.nn.ReLU(inplace=True)
+            )
+            for _ in range(self.conv_layers)]
         )
 
         self.conv = torch.nn.Conv2d(in_features, out_features * (meta.upsample_stride ** 2),
                                     kernel_size, padding=padding, dilation=dilation)
-
 
         # upsample
         assert meta.upsample_stride >= 1
@@ -299,27 +297,27 @@ class DeepCompositeField3(HeadNetwork):
 
     @classmethod
     def cli(cls, parser: argparse.ArgumentParser):
-        group = parser.add_argument_group('CompositeField3')
-        group.add_argument('--cf3-dropout', default=cls.dropout_p, type=float,
+        group = parser.add_argument_group('DeepCompositeField3')
+        group.add_argument('--deep-cf3-dropout', default=cls.dropout_p, type=float,
                            help='[experimental] zeroing probability of feature in head input')
         assert cls.inplace_ops
-        group.add_argument('--cf3-no-inplace-ops', dest='cf3_inplace_ops',
+        group.add_argument('--deep-cf3-no-inplace-ops', dest='deep_cf3_inplace_ops',
                            default=True, action='store_false',
                            help='alternative graph without inplace ops')
+        group.add_argument('--deep-cf3-layers', default=0, type=int, help='additional 1x1 conf layers')
 
     @classmethod
     def configure(cls, args: argparse.Namespace):
-        cls.dropout_p = args.cf3_dropout
-        cls.inplace_ops = args.cf3_inplace_ops
+        cls.dropout_p = args.deep_cf3_dropout
+        cls.inplace_ops = args.deep_cf3_inplace_ops
+        cls.conv_layers = args.deep_cf3_layers
 
     @property
     def sparse_task_parameters(self):
         return [self.conv.weight]
 
     def forward(self, x):  # pylint: disable=arguments-differ
-        x = self.conv1(x)
-        x = self.conv2(x)
-        # x = self.conv3(x)
+        x = self.convs(x)
         x = self.dropout(x)
         x = self.conv(x)
         # upscale
