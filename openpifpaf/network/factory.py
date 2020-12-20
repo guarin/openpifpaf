@@ -18,15 +18,16 @@ CHECKPOINT_URLS = {
     'mobilenetv2': ('https://github.com/vita-epfl/openpifpaf-torchhub/releases/download/'
                     'v0.12a5/mobilenetv2-201112-193315-cocokp-1728a9f5.pkl'),
     'resnet18': PRETRAINED_UNAVAILABLE,
-    'resnet50': PRETRAINED_UNAVAILABLE,
+    'resnet50': ('https://github.com/vita-epfl/openpifpaf-torchhub/releases/download/'
+                 'v0.12a7/resnet50-201123-175351-cocokp-o10s-127f7fdf.pkl'),
     'resnet101': PRETRAINED_UNAVAILABLE,
     'resnet152': PRETRAINED_UNAVAILABLE,
     'shufflenetv2x1': PRETRAINED_UNAVAILABLE,
     'shufflenetv2x2': PRETRAINED_UNAVAILABLE,
     'shufflenetv2k16': ('https://github.com/vita-epfl/openpifpaf-torchhub/releases/download/'
-                        'v0.12a5/shufflenetv2k16-201103-202759-cocokp-6a9ca7d9.pkl'),
+                        'v0.12a7/shufflenetv2k16-201123-174947-cocokp-o10s-bdd04c8f.pkl'),
     'shufflenetv2k30': ('https://github.com/vita-epfl/openpifpaf-torchhub/releases/download/'
-                        'v0.12a5/shufflenetv2k30-201104-224654-cocokp-d75ed641.pkl'),
+                        'v0.12a7/shufflenetv2k30-201123-174748-cocokp-o10s-bc89e3d5.pkl'),
     'shufflenetv2k44': PRETRAINED_UNAVAILABLE,
 }
 
@@ -48,11 +49,14 @@ BASE_FACTORIES = {
     'shufflenetv2x1': lambda: basenetworks.ShuffleNetV2(
         'shufflenetv2x1', torchvision.models.shufflenet_v2_x1_0, 1024),
     'shufflenetv2x2': lambda: basenetworks.ShuffleNetV2(
+        # defined in torchvision as [4, 8, 4], [24, 244, 488, 976, 2048]
         'shufflenetv2x2', torchvision.models.shufflenet_v2_x2_0),
     'shufflenetv2k16': lambda: basenetworks.ShuffleNetV2K(
         'shufflenetv2k16', [4, 8, 4], [24, 348, 696, 1392, 1392]),
     'shufflenetv2k20': lambda: basenetworks.ShuffleNetV2K(
         'shufflenetv2k20', [5, 10, 5], [32, 512, 1024, 2048, 2048]),
+    'shufflenetv2kx5': lambda: basenetworks.ShuffleNetV2K(
+        'shufflenetv2kx5', [6, 13, 6], [42, 640, 1280, 2560, 2560]),
     'shufflenetv2k30': lambda: basenetworks.ShuffleNetV2K(
         'shufflenetv2k30', [8, 16, 6], [32, 512, 1024, 2048, 2048]),
     'shufflenetv2k44': lambda: basenetworks.ShuffleNetV2K(
@@ -60,12 +64,8 @@ BASE_FACTORIES = {
     'squeezenet': lambda: basenetworks.SqueezeNet('squeezenet', torchvision.models.squeezenet1_1),
 }
 
-HEAD_TYPES = {
-    heads.CompositeField3,
-    heads.DeepCompositeField3
-}
-
-HEAD_FACTORIES = {
+#: headmeta class to head class
+HEADS = {
     headmeta.Cif: heads.CompositeField3,
     headmeta.Caf: heads.CompositeField3,
     headmeta.CifDet: heads.CompositeField3,
@@ -187,7 +187,7 @@ def factory(
                 head_metas[input_index] = hn.meta
         elif head_metas is not None and head_consolidation == 'create':
             LOG.info('creating new heads')
-            headnets = [HEAD_FACTORIES[h.__class__](h, net_cpu.base_net.out_features)
+            headnets = [HEADS[h.__class__](h, net_cpu.base_net.out_features)
                         for h in head_metas]
             net_cpu.set_head_nets(headnets)
         elif head_metas is not None and head_consolidation == 'filter_and_extend':
@@ -207,9 +207,10 @@ def factory(
                     # base_stride attributes set.
                     head_metas[meta_i] = hn.meta
                 else:
-                    hn = HEAD_FACTORIES[meta.__class__](meta, net_cpu.base_net.out_features)
+                    hn = HEADS[meta.__class__](meta, net_cpu.base_net.out_features)
                     LOG.info('creating new head %s', (meta.dataset, meta.name))
                     headnets.append(hn)
+
             net_cpu.set_head_nets(headnets)
         elif head_metas is not None:
             raise Exception('head strategy {} unknown'.format(head_consolidation))
@@ -279,7 +280,7 @@ def factory_from_scratch(basename, head_metas) -> nets.Shell:
         raise Exception('basename {} unknown'.format(basename))
 
     basenet = BASE_FACTORIES[basename]()
-    headnets = [HEAD_FACTORIES[h.__class__](h, basenet.out_features) for h in head_metas]
+    headnets = [HEADS[h.__class__](h, basenet.out_features) for h in head_metas]
 
     net_cpu = nets.Shell(basenet, headnets)
     nets.model_defaults(net_cpu)
@@ -290,14 +291,14 @@ def factory_from_scratch(basename, head_metas) -> nets.Shell:
 def configure(args):
     for bn in BASE_TYPES:
         bn.configure(args)
-    for hn in HEAD_TYPES:
+    for hn in set(HEADS.values()):
         hn.configure(args)
 
 
 def cli(parser):
     for bn in BASE_TYPES:
         bn.cli(parser)
-    for hn in HEAD_TYPES:
+    for hn in set(HEADS.values()):
         hn.cli(parser)
 
     group = parser.add_argument_group('network configuration')
