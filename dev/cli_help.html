@@ -25,8 +25,8 @@
     href="_static/vendor/lato_latin-ext/1.44.1/index.css">
 
     
-    <link rel="stylesheet" href="_static/sphinx-book-theme.2d2078699c18a0efb88233928e1cf6ed.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
@@ -40,12 +40,11 @@
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <script src="_static/togglebutton.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
     <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.be0a4a0c39cd630af62a2fcf693f3f06.js"></script>
+    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
     <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
@@ -84,22 +83,19 @@
   <h1 class="site-logo" id="site-title">OpenPifPaf Guide DEV</h1>
   
 </a>
-</div>
-
-<form class="bd-search d-flex align-items-center" action="search.html" method="get">
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
   <i class="icon fas fa-search"></i>
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form>
-
 <nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
-  <ul class="nav sidenav_l1">
+    <ul class="nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="intro.html">
    Introduction
   </a>
  </li>
 </ul>
-<p class="caption">
+<p class="caption collapsible-parent">
  <span class="caption-text">
   Getting Started
  </span>
@@ -141,7 +137,7 @@
   </a>
  </li>
 </ul>
-<p class="caption">
+<p class="caption collapsible-parent">
  <span class="caption-text">
   API
  </span>
@@ -158,7 +154,7 @@
   </a>
  </li>
 </ul>
-<p class="caption">
+<p class="caption collapsible-parent">
  <span class="caption-text">
   Plugins
  </span>
@@ -175,7 +171,7 @@
   </a>
  </li>
 </ul>
-<p class="caption">
+<p class="caption collapsible-parent">
  <span class="caption-text">
   Development
  </span>
@@ -207,9 +203,7 @@
  </li>
 </ul>
 
-</nav>
-
- <!-- To handle the deprecated key -->
+</nav> <!-- To handle the deprecated key -->
 
 <div class="navbar_extra_footer">
   This is the dev version of the Guide. Here is the <a href="https://vita-epfl.github.io/openpifpaf/">stable version</a>.
@@ -238,11 +232,11 @@
             <i class="fas fa-arrow-up"></i>
         </button>
         
-        <div class="dropdown-buttons-trigger">
+        
+<div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
             class="fas fa-download"></i></button>
 
-    
     <div class="dropdown-buttons">
         <!-- ipynb file if we had a myst markdown file -->
         
@@ -254,8 +248,8 @@
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
             onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
     </div>
-    
 </div>
+
         <!-- Source interaction buttons -->
 
 
@@ -386,12 +380,14 @@ optional arguments:
   --disable-cuda        disable CUDA (default: False)
 
 decoder configuration:
-  --decoder {cifdet,cifcaf} [{cifdet,cifcaf} ...]
-                        Decoders to be considered. (default: None)
+  --decoder DECODER [DECODER ...]
+                        Decoders to be considered: [&#39;cifdet&#39;, &#39;cifcaf&#39;].
+                        (default: None)
   --seed-threshold SEED_THRESHOLD
                         minimum threshold for seeds (default: 0.5)
   --instance-threshold INSTANCE_THRESHOLD
-                        filter instances by score (default: 0.0)
+                        filter instances by score (0.0 with --force-complete-
+                        pose else 0.15) (default: None)
   --decoder-workers DECODER_WORKERS
                         number of workers for pose decoding (default: None)
   --caf-seeds           [experimental] (default: False)
@@ -406,10 +402,10 @@ CifCaf decoders:
 CifCaf decoder:
   --force-complete-pose
   --keypoint-threshold KEYPOINT_THRESHOLD
-                        filter keypoints by score (default: 0.001)
+                        filter keypoints by score (default: 0.15)
   --keypoint-threshold-rel KEYPOINT_THRESHOLD_REL
                         filter keypoint connections by relative score
-                        (default: 0.0)
+                        (default: 0.5)
   --greedy              greedy decoding (default: False)
   --connection-method {max,blend}
                         connection method to use, max is faster (default:
@@ -419,11 +415,20 @@ CifCaf decoder:
   --ablation-cifseeds-nms
   --ablation-cifseeds-no-rescore
   --ablation-caf-no-rescore
+  --ablation-independent-kp
 
 logger:
   -q, --quiet           only show warning messages or above (default: False)
   --debug               print debug messages (default: False)
   --log-stats           enable stats logging (default: False)
+
+SqueezeNet:
+  --squeezenet-no-pretrain
+                        use randomly initialized models (default: True)
+
+MobileNetV2:
+  --mobilenetv2-no-pretrain
+                        use randomly initialized models (default: True)
 
 shufflenetv2k:
   --shufflenetv2k-input-conv2-stride SHUFFLENETV2K_INPUT_CONV2_STRIDE
@@ -436,8 +441,13 @@ shufflenetv2k:
                         dilation factor of stage 4 (default: 1)
   --shufflenetv2k-kernel SHUFFLENETV2K_KERNEL
                         kernel width (default: 5)
+  --shufflenetv2k-conv5-as-stage
   --shufflenetv2k-instance-norm
   --shufflenetv2k-group-norm
+
+ShuffleNetv2:
+  --shufflenetv2-no-pretrain
+                        use randomly initialized models (default: True)
 
 ResNet:
   --resnet-no-pretrain  use randomly initialized models (default: True)
@@ -454,10 +464,6 @@ ResNet:
                         create a network without the last block (default:
                         False)
 
-ShuffleNetv2:
-  --shufflenetv2-no-pretrain
-                        use randomly initialized models (default: True)
-
 CompositeField3:
   --cf3-dropout CF3_DROPOUT
                         [experimental] zeroing probability of feature in head
@@ -466,14 +472,12 @@ CompositeField3:
 
 network configuration:
   --checkpoint CHECKPOINT
-                        Load a model from a checkpoint. Use &quot;resnet50&quot;,
-                        &quot;shufflenetv2k16w&quot; or &quot;shufflenetv2k30w&quot; for
-                        pretrained OpenPifPaf models. (default: None)
+                        Path to a local checkpoint. Or provide one of the
+                        following to download a pretrained model:
+                        &quot;mobilenetv2&quot;, &quot;resnet50&quot;, &quot;shufflenetv2k16&quot;,
+                        &quot;shufflenetv2k30&quot; (default: None)
   --basenet BASENET     base network, e.g. resnet50 (default: None)
   --two-scale           [experimental] (default: False)
-  --multi-scale         [experimental] (default: False)
-  --no-multi-scale-hflip
-                        [experimental] (default: True)
   --cross-talk CROSS_TALK
                         [experimental] (default: 0.0)
   --no-download-progress
@@ -503,6 +507,7 @@ show:
                         default file extension (default: png)
   --textbox-alpha TEXTBOX_ALPHA
   --text-color TEXT_COLOR
+  --font-size FONT_SIZE
   --monocolor-connections
   --line-width LINE_WIDTH
   --skeleton-solid-threshold SKELETON_SOLID_THRESHOLD
@@ -514,7 +519,10 @@ show:
   --show-frontier-order
   --show-only-decoded-connections
   --video-fps VIDEO_FPS
+                        output video frame rate (frames per second) (default:
+                        10)
   --video-dpi VIDEO_DPI
+                        output video resolution (dots per inch) (default: 100)
 
 pose visualizer:
   --debug-cifhr
@@ -585,6 +593,7 @@ optional arguments:
   --crop CROP CROP CROP CROP
                         left top right bottom (default: None)
   --rotate {left,right,180}
+  --separate-debug-ax
 
 ShuffleNetv2:
   --shufflenetv2-no-pretrain
@@ -601,6 +610,7 @@ shufflenetv2k:
                         dilation factor of stage 4 (default: 1)
   --shufflenetv2k-kernel SHUFFLENETV2K_KERNEL
                         kernel width (default: 5)
+  --shufflenetv2k-conv5-as-stage
   --shufflenetv2k-instance-norm
   --shufflenetv2k-group-norm
 
@@ -619,6 +629,14 @@ ResNet:
                         create a network without the last block (default:
                         False)
 
+SqueezeNet:
+  --squeezenet-no-pretrain
+                        use randomly initialized models (default: True)
+
+MobileNetV2:
+  --mobilenetv2-no-pretrain
+                        use randomly initialized models (default: True)
+
 CompositeField3:
   --cf3-dropout CF3_DROPOUT
                         [experimental] zeroing probability of feature in head
@@ -627,14 +645,12 @@ CompositeField3:
 
 network configuration:
   --checkpoint CHECKPOINT
-                        Load a model from a checkpoint. Use &quot;resnet50&quot;,
-                        &quot;shufflenetv2k16w&quot; or &quot;shufflenetv2k30w&quot; for
-                        pretrained OpenPifPaf models. (default: None)
+                        Path to a local checkpoint. Or provide one of the
+                        following to download a pretrained model:
+                        &quot;mobilenetv2&quot;, &quot;resnet50&quot;, &quot;shufflenetv2k16&quot;,
+                        &quot;shufflenetv2k30&quot; (default: None)
   --basenet BASENET     base network, e.g. resnet50 (default: None)
   --two-scale           [experimental] (default: False)
-  --multi-scale         [experimental] (default: False)
-  --no-multi-scale-hflip
-                        [experimental] (default: True)
   --cross-talk CROSS_TALK
                         [experimental] (default: 0.0)
   --no-download-progress
@@ -645,12 +661,14 @@ network configuration:
                         (default: filter_and_extend)
 
 decoder configuration:
-  --decoder {cifcaf,cifdet} [{cifcaf,cifdet} ...]
-                        Decoders to be considered. (default: None)
+  --decoder DECODER [DECODER ...]
+                        Decoders to be considered: [&#39;cifdet&#39;, &#39;cifcaf&#39;].
+                        (default: None)
   --seed-threshold SEED_THRESHOLD
                         minimum threshold for seeds (default: 0.5)
   --instance-threshold INSTANCE_THRESHOLD
-                        filter instances by score (default: 0.0)
+                        filter instances by score (0.0 with --force-complete-
+                        pose else 0.15) (default: None)
   --decoder-workers DECODER_WORKERS
                         number of workers for pose decoding (default: None)
   --caf-seeds           [experimental] (default: False)
@@ -665,10 +683,10 @@ CifCaf decoders:
 CifCaf decoder:
   --force-complete-pose
   --keypoint-threshold KEYPOINT_THRESHOLD
-                        filter keypoints by score (default: 0.001)
+                        filter keypoints by score (default: 0.15)
   --keypoint-threshold-rel KEYPOINT_THRESHOLD_REL
                         filter keypoint connections by relative score
-                        (default: 0.0)
+                        (default: 0.5)
   --greedy              greedy decoding (default: False)
   --connection-method {max,blend}
                         connection method to use, max is faster (default:
@@ -678,6 +696,7 @@ CifCaf decoder:
   --ablation-cifseeds-nms
   --ablation-cifseeds-no-rescore
   --ablation-caf-no-rescore
+  --ablation-independent-kp
 
 logger:
   -q, --quiet           only show warning messages or above (default: False)
@@ -704,6 +723,7 @@ show:
                         default file extension (default: png)
   --textbox-alpha TEXTBOX_ALPHA
   --text-color TEXT_COLOR
+  --font-size FONT_SIZE
   --monocolor-connections
   --line-width LINE_WIDTH
   --skeleton-solid-threshold SKELETON_SOLID_THRESHOLD
@@ -715,7 +735,10 @@ show:
   --show-frontier-order
   --show-only-decoded-connections
   --video-fps VIDEO_FPS
+                        output video frame rate (frames per second) (default:
+                        10)
   --video-dpi VIDEO_DPI
+                        output video resolution (dots per inch) (default: 100)
 
 pose visualizer:
   --debug-cifhr
@@ -753,28 +776,16 @@ optional arguments:
   --version             show program&#39;s version number and exit
   -o OUTPUT, --output OUTPUT
                         output file (default: None)
-  --stride-apply STRIDE_APPLY
-                        apply and reset gradients every n batches (default: 1)
-  --epochs EPOCHS       number of epochs to train (default: 75)
-  --val-interval VAL_INTERVAL
-                        validation run every n epochs (default: 1)
-  --train-batches TRAIN_BATCHES
-                        number of train batches (default: None)
-  --val-batches VAL_BATCHES
-                        number of val batches (default: None)
-  --fix-batch-norm      fix batch norm running statistics (default: False)
-  --ema EMA             ema decay constant (default: 0.01)
-  --clip-grad-norm CLIP_GRAD_NORM
-                        clip grad norm: specify largest change for single
-                        param (default: 0.0)
-  --log-interval LOG_INTERVAL
-                        log loss every n steps (default: 11)
   --disable-cuda        disable CUDA (default: False)
 
 logger:
   -q, --quiet           only show warning messages or above (default: False)
   --debug               print debug messages (default: False)
   --log-stats           enable stats logging (default: False)
+
+ShuffleNetv2:
+  --shufflenetv2-no-pretrain
+                        use randomly initialized models (default: True)
 
 shufflenetv2k:
   --shufflenetv2k-input-conv2-stride SHUFFLENETV2K_INPUT_CONV2_STRIDE
@@ -787,12 +798,9 @@ shufflenetv2k:
                         dilation factor of stage 4 (default: 1)
   --shufflenetv2k-kernel SHUFFLENETV2K_KERNEL
                         kernel width (default: 5)
+  --shufflenetv2k-conv5-as-stage
   --shufflenetv2k-instance-norm
   --shufflenetv2k-group-norm
-
-ShuffleNetv2:
-  --shufflenetv2-no-pretrain
-                        use randomly initialized models (default: True)
 
 ResNet:
   --resnet-no-pretrain  use randomly initialized models (default: True)
@@ -809,6 +817,14 @@ ResNet:
                         create a network without the last block (default:
                         False)
 
+SqueezeNet:
+  --squeezenet-no-pretrain
+                        use randomly initialized models (default: True)
+
+MobileNetV2:
+  --mobilenetv2-no-pretrain
+                        use randomly initialized models (default: True)
+
 CompositeField3:
   --cf3-dropout CF3_DROPOUT
                         [experimental] zeroing probability of feature in head
@@ -817,14 +833,12 @@ CompositeField3:
 
 network configuration:
   --checkpoint CHECKPOINT
-                        Load a model from a checkpoint. Use &quot;resnet50&quot;,
-                        &quot;shufflenetv2k16w&quot; or &quot;shufflenetv2k30w&quot; for
-                        pretrained OpenPifPaf models. (default: None)
+                        Path to a local checkpoint. Or provide one of the
+                        following to download a pretrained model:
+                        &quot;mobilenetv2&quot;, &quot;resnet50&quot;, &quot;shufflenetv2k16&quot;,
+                        &quot;shufflenetv2k30&quot; (default: None)
   --basenet BASENET     base network, e.g. resnet50 (default: None)
   --two-scale           [experimental] (default: False)
-  --multi-scale         [experimental] (default: False)
-  --no-multi-scale-hflip
-                        [experimental] (default: True)
   --cross-talk CROSS_TALK
                         [experimental] (default: 0.0)
   --no-download-progress
@@ -837,16 +851,8 @@ network configuration:
 losses:
   --lambdas LAMBDAS [LAMBDAS ...]
                         prefactor for head losses (default: None)
-  --r-smooth R_SMOOTH   r_{smooth} for SmoothL1 regressions (default: 0.0)
   --regression-loss {smoothl1,smootherl1,l1,laplace}
                         type of regression loss (default: laplace)
-  --background-weight BACKGROUND_WEIGHT
-                        BCE weight where ground truth is background (default:
-                        1.0)
-  --b-scale B_SCALE     Laplace width b for scale loss (default: 1.0)
-  --focal-gamma FOCAL_GAMMA
-                        when &gt; 0.0, use focal loss with the given gamma
-                        (default: 1.0)
   --auto-tune-mtl       [experimental] use Kendall&#39;s prescription for
                         adjusting the multitask weight (default: False)
   --auto-tune-mtl-variance
@@ -854,6 +860,42 @@ losses:
                         the multitask weight (default: False)
   --task-sparsity-weight TASK_SPARSITY_WEIGHT
                         [experimental] (default: 0.0)
+
+Composite Loss:
+  --b-scale B_SCALE     Laplace width b for scale loss (default: 1.0)
+
+Bce Loss:
+  --r-smooth R_SMOOTH   r_{smooth} for SmoothL1 regressions (default: 0.0)
+
+Bce Loss:
+  --background-weight BACKGROUND_WEIGHT
+                        BCE weight where ground truth is background (default:
+                        1.0)
+  --focal-gamma FOCAL_GAMMA
+                        when &gt; 0.0, use focal loss with the given gamma
+                        (default: 1.0)
+
+trainer:
+  --epochs EPOCHS       number of epochs to train (default: None)
+  --train-batches TRAIN_BATCHES
+                        number of train batches (default: None)
+  --val-batches VAL_BATCHES
+                        number of val batches (default: None)
+  --clip-grad-norm CLIP_GRAD_NORM
+                        clip grad norm: specify largest change for single
+                        param (default: 0.0)
+  --log-interval LOG_INTERVAL
+                        log loss every n steps (default: 11)
+  --val-interval VAL_INTERVAL
+                        validation run every n epochs (default: 1)
+  --stride-apply STRIDE_APPLY
+                        apply and reset gradients every n batches (default: 1)
+  --fix-batch-norm [FIX_BATCH_NORM]
+                        fix batch norm running statistics (optionally specify
+                        epoch) (default: False)
+  --ema EMA             ema decay constant (default: 0.01)
+  --profile PROFILE     enables profiling. specify path for chrome tracing
+                        file (default: None)
 
 encoders:
   --cif-side-length CIF_SIDE_LENGTH
@@ -904,9 +946,13 @@ generic data module parameters:
   --loader-workers LOADER_WORKERS
                         number of workers for data loading (default: None)
   --batch-size BATCH_SIZE
-                        batch size (default: 8)
+                        batch size (default: 1)
   --dataset-weights DATASET_WEIGHTS [DATASET_WEIGHTS ...]
                         n-1 weights for the datasets (default: None)
+
+data module Cifar10:
+  --cifar10-root-dir CIFAR10_ROOT_DIR
+  --cifar10-download
 
 data module CocoDet:
   --cocodet-train-annotations COCODET_TRAIN_ANNOTATIONS
@@ -960,10 +1006,6 @@ data module CocoKp:
   --coco-eval-extended-scale
   --coco-eval-orientation-invariant COCO_EVAL_ORIENTATION_INVARIANT
 
-data module Cifar10:
-  --cifar10-root-dir CIFAR10_ROOT_DIR
-  --cifar10-download
-
 show:
   --save-all [SAVE_ALL]
                         every plot is saved (optional to specify directory)
@@ -984,6 +1026,7 @@ show:
                         default file extension (default: png)
   --textbox-alpha TEXTBOX_ALPHA
   --text-color TEXT_COLOR
+  --font-size FONT_SIZE
   --monocolor-connections
   --line-width LINE_WIDTH
   --skeleton-solid-threshold SKELETON_SOLID_THRESHOLD
@@ -995,7 +1038,10 @@ show:
   --show-frontier-order
   --show-only-decoded-connections
   --video-fps VIDEO_FPS
+                        output video frame rate (frames per second) (default:
+                        10)
   --video-dpi VIDEO_DPI
+                        output video resolution (dots per inch) (default: 100)
 
 pose visualizer:
   --debug-cifhr
@@ -1010,10 +1056,6 @@ pose visualizer:
                         form headname:fieldindex, e.g. cif:5 (default: [])
   --debug-images        print debug messages and enable all debug images
                         (default: False)
-
-debug:
-  --profile PROFILE     enables profiling. specify path for chrome tracing
-                        file (default: None)
 </pre></div>
 </div>
 </div>
@@ -1039,6 +1081,7 @@ optional arguments:
   --skip-existing       skip if output eval file exists already (default:
                         False)
   --no-skip-epoch0      do not skip eval for epoch 0 (default: True)
+  --watch [WATCH]
   --disable-cuda        disable CUDA (default: False)
   --write-predictions   write a json and a zip file of the predictions
                         (default: False)
@@ -1050,9 +1093,13 @@ generic data module parameters:
   --loader-workers LOADER_WORKERS
                         number of workers for data loading (default: None)
   --batch-size BATCH_SIZE
-                        batch size (default: 8)
+                        batch size (default: 1)
   --dataset-weights DATASET_WEIGHTS [DATASET_WEIGHTS ...]
                         n-1 weights for the datasets (default: None)
+
+data module Cifar10:
+  --cifar10-root-dir CIFAR10_ROOT_DIR
+  --cifar10-download
 
 data module CocoDet:
   --cocodet-train-annotations COCODET_TRAIN_ANNOTATIONS
@@ -1106,17 +1153,15 @@ data module CocoKp:
   --coco-eval-extended-scale
   --coco-eval-orientation-invariant COCO_EVAL_ORIENTATION_INVARIANT
 
-data module Cifar10:
-  --cifar10-root-dir CIFAR10_ROOT_DIR
-  --cifar10-download
-
 decoder configuration:
-  --decoder {cifcaf,cifdet} [{cifcaf,cifdet} ...]
-                        Decoders to be considered. (default: None)
+  --decoder DECODER [DECODER ...]
+                        Decoders to be considered: [&#39;cifdet&#39;, &#39;cifcaf&#39;].
+                        (default: None)
   --seed-threshold SEED_THRESHOLD
                         minimum threshold for seeds (default: 0.5)
   --instance-threshold INSTANCE_THRESHOLD
-                        filter instances by score (default: 0.0)
+                        filter instances by score (0.0 with --force-complete-
+                        pose else 0.15) (default: None)
   --decoder-workers DECODER_WORKERS
                         number of workers for pose decoding (default: None)
   --caf-seeds           [experimental] (default: False)
@@ -1131,10 +1176,10 @@ CifCaf decoders:
 CifCaf decoder:
   --force-complete-pose
   --keypoint-threshold KEYPOINT_THRESHOLD
-                        filter keypoints by score (default: 0.001)
+                        filter keypoints by score (default: 0.15)
   --keypoint-threshold-rel KEYPOINT_THRESHOLD_REL
                         filter keypoint connections by relative score
-                        (default: 0.0)
+                        (default: 0.5)
   --greedy              greedy decoding (default: False)
   --connection-method {max,blend}
                         connection method to use, max is faster (default:
@@ -1144,11 +1189,16 @@ CifCaf decoder:
   --ablation-cifseeds-nms
   --ablation-cifseeds-no-rescore
   --ablation-caf-no-rescore
+  --ablation-independent-kp
 
 logger:
   -q, --quiet           only show warning messages or above (default: False)
   --debug               print debug messages (default: False)
   --log-stats           enable stats logging (default: False)
+
+ShuffleNetv2:
+  --shufflenetv2-no-pretrain
+                        use randomly initialized models (default: True)
 
 shufflenetv2k:
   --shufflenetv2k-input-conv2-stride SHUFFLENETV2K_INPUT_CONV2_STRIDE
@@ -1161,12 +1211,9 @@ shufflenetv2k:
                         dilation factor of stage 4 (default: 1)
   --shufflenetv2k-kernel SHUFFLENETV2K_KERNEL
                         kernel width (default: 5)
+  --shufflenetv2k-conv5-as-stage
   --shufflenetv2k-instance-norm
   --shufflenetv2k-group-norm
-
-ShuffleNetv2:
-  --shufflenetv2-no-pretrain
-                        use randomly initialized models (default: True)
 
 ResNet:
   --resnet-no-pretrain  use randomly initialized models (default: True)
@@ -1183,6 +1230,14 @@ ResNet:
                         create a network without the last block (default:
                         False)
 
+SqueezeNet:
+  --squeezenet-no-pretrain
+                        use randomly initialized models (default: True)
+
+MobileNetV2:
+  --mobilenetv2-no-pretrain
+                        use randomly initialized models (default: True)
+
 CompositeField3:
   --cf3-dropout CF3_DROPOUT
                         [experimental] zeroing probability of feature in head
@@ -1191,14 +1246,12 @@ CompositeField3:
 
 network configuration:
   --checkpoint CHECKPOINT
-                        Load a model from a checkpoint. Use &quot;resnet50&quot;,
-                        &quot;shufflenetv2k16w&quot; or &quot;shufflenetv2k30w&quot; for
-                        pretrained OpenPifPaf models. (default: None)
+                        Path to a local checkpoint. Or provide one of the
+                        following to download a pretrained model:
+                        &quot;mobilenetv2&quot;, &quot;resnet50&quot;, &quot;shufflenetv2k16&quot;,
+                        &quot;shufflenetv2k30&quot; (default: None)
   --basenet BASENET     base network, e.g. resnet50 (default: None)
   --two-scale           [experimental] (default: False)
-  --multi-scale         [experimental] (default: False)
-  --no-multi-scale-hflip
-                        [experimental] (default: True)
   --cross-talk CROSS_TALK
                         [experimental] (default: 0.0)
   --no-download-progress
@@ -1228,6 +1281,7 @@ show:
                         default file extension (default: png)
   --textbox-alpha TEXTBOX_ALPHA
   --text-color TEXT_COLOR
+  --font-size FONT_SIZE
   --monocolor-connections
   --line-width LINE_WIDTH
   --skeleton-solid-threshold SKELETON_SOLID_THRESHOLD
@@ -1239,7 +1293,10 @@ show:
   --show-frontier-order
   --show-only-decoded-connections
   --video-fps VIDEO_FPS
+                        output video frame rate (frames per second) (default:
+                        10)
   --video-dpi VIDEO_DPI
+                        output video resolution (dots per inch) (default: 100)
 
 pose visualizer:
   --debug-cifhr
@@ -1344,7 +1401,8 @@ optional arguments:
                                        [--checkpoints CHECKPOINTS [CHECKPOINTS ...]]
                                        [--iccv2019-ablation]
                                        [--v012-ablation-1] [--v012-ablation-2]
-                                       [--v012-ablation-3] [--debug]
+                                       [--v012-ablation-3] [--v012-ablation-4]
+                                       [--debug]
 
 Benchmark.
 
@@ -1359,6 +1417,7 @@ optional arguments:
   --v012-ablation-1
   --v012-ablation-2
   --v012-ablation-3
+  --v012-ablation-4
 
 logging:
   --debug               print debug messages (default: False)
@@ -1420,6 +1479,7 @@ show:
                         default file extension (default: png)
   --textbox-alpha TEXTBOX_ALPHA
   --text-color TEXT_COLOR
+  --font-size FONT_SIZE
   --monocolor-connections
   --line-width LINE_WIDTH
   --skeleton-solid-threshold SKELETON_SOLID_THRESHOLD
@@ -1431,7 +1491,10 @@ show:
   --show-frontier-order
   --show-only-decoded-connections
   --video-fps VIDEO_FPS
+                        output video frame rate (frames per second) (default:
+                        10)
   --video-dpi VIDEO_DPI
+                        output video resolution (dots per inch) (default: 100)
 </pre></div>
 </div>
 </div>

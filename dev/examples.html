@@ -25,8 +25,8 @@
     href="_static/vendor/lato_latin-ext/1.44.1/index.css">
 
     
-    <link rel="stylesheet" href="_static/sphinx-book-theme.2d2078699c18a0efb88233928e1cf6ed.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
@@ -40,12 +40,11 @@
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <script src="_static/togglebutton.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
     <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinx-book-theme.be0a4a0c39cd630af62a2fcf693f3f06.js"></script>
+    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
     <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
@@ -84,22 +83,19 @@
   <h1 class="site-logo" id="site-title">OpenPifPaf Guide DEV</h1>
   
 </a>
-</div>
-
-<form class="bd-search d-flex align-items-center" action="search.html" method="get">
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
   <i class="icon fas fa-search"></i>
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form>
-
 <nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
-  <ul class="nav sidenav_l1">
+    <ul class="nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="intro.html">
    Introduction
   </a>
  </li>
 </ul>
-<p class="caption">
+<p class="caption collapsible-parent">
  <span class="caption-text">
   Getting Started
  </span>
@@ -141,7 +137,7 @@
   </a>
  </li>
 </ul>
-<p class="caption">
+<p class="caption collapsible-parent">
  <span class="caption-text">
   API
  </span>
@@ -158,7 +154,7 @@
   </a>
  </li>
 </ul>
-<p class="caption">
+<p class="caption collapsible-parent">
  <span class="caption-text">
   Plugins
  </span>
@@ -175,7 +171,7 @@
   </a>
  </li>
 </ul>
-<p class="caption">
+<p class="caption collapsible-parent">
  <span class="caption-text">
   Development
  </span>
@@ -207,9 +203,7 @@
  </li>
 </ul>
 
-</nav>
-
- <!-- To handle the deprecated key -->
+</nav> <!-- To handle the deprecated key -->
 
 <div class="navbar_extra_footer">
   This is the dev version of the Guide. Here is the <a href="https://vita-epfl.github.io/openpifpaf/">stable version</a>.
@@ -238,11 +232,11 @@
             <i class="fas fa-arrow-up"></i>
         </button>
         
-        <div class="dropdown-buttons-trigger">
+        
+<div class="dropdown-buttons-trigger">
     <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
             class="fas fa-download"></i></button>
 
-    
     <div class="dropdown-buttons">
         <!-- ipynb file if we had a myst markdown file -->
         
@@ -254,8 +248,8 @@
         <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
             onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
     </div>
-    
 </div>
+
         <!-- Source interaction buttons -->
 
 
@@ -289,6 +283,20 @@
     <!-- Table of contents -->
     <div class="d-none d-md-block col-md-2 bd-toc show">
         
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#debug-outputs">
+   Debug Outputs
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
     </div>
 </div>
     <div id="main-content" class="row">
@@ -301,8 +309,8 @@
 <p>Example predictions from the COCO val set.
 These are the first images with more than five person annotations that were shared with <a class="reference external" href="https://creativecommons.org/licenses/by/2.0/">CC-BY-2.0</a>.
 These examples are not cherry-picked.</p>
-<p>All examples are predicted with the fast model <code class="docutils literal notranslate"><span class="pre">shufflenetv2k16w</span></code>. <br />
-For more accurate results, try <code class="docutils literal notranslate"><span class="pre">--checkpoint=shufflenetv2k30w</span></code>.</p>
+<p>All examples are predicted with the fast model <code class="docutils literal notranslate"><span class="pre">shufflenetv2k16</span></code>. <br />
+For more accurate results, try <code class="docutils literal notranslate"><span class="pre">--checkpoint=shufflenetv2k30</span></code>.</p>
 <p>The examples below are generated with the shown command which is documented in <a class="reference internal" href="predict_cli.html"><span class="doc">Prediction</span></a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -311,7 +319,11 @@ For more accurate results, try <code class="docutils literal notranslate"><span 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:openpifpaf.decoder.cifcaf:23 annotations: [14, 16, 17, 17, 11, 16, 15, 13, 13, 10, 15, 13, 15, 11, 13, 12, 10, 13, 13, 11, 8, 9, 7]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.7.9/x64/lib/python3.7/site-packages/torch/cuda/__init__.py:52: UserWarning: CUDA initialization: Found no NVIDIA driver on your system. Please check that you have an NVIDIA GPU and installed a driver from http://www.nvidia.com/Download/index.aspx (Triggered internally at  /pytorch/c10/cuda/CUDAFunctions.cpp:100.)
+  return torch._C._cuda_getDeviceCount() &gt; 0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:openpifpaf.decoder.cifcaf:27 annotations: [14, 14, 17, 17, 14, 16, 12, 12, 9, 13, 9, 13, 8, 11, 13, 11, 11, 12, 8, 11, 8, 11, 8, 7, 8, 3, 3]
 INFO:__main__:batch 0: coco/000000188465.jpg
 </pre></div>
 </div>
@@ -326,7 +338,11 @@ Image credit: <a class="reference external" href="https://www.flickr.com/photos/
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:openpifpaf.decoder.cifcaf:13 annotations: [14, 9, 9, 6, 4, 6, 4, 3, 4, 6, 3, 4, 5]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.7.9/x64/lib/python3.7/site-packages/torch/cuda/__init__.py:52: UserWarning: CUDA initialization: Found no NVIDIA driver on your system. Please check that you have an NVIDIA GPU and installed a driver from http://www.nvidia.com/Download/index.aspx (Triggered internally at  /pytorch/c10/cuda/CUDAFunctions.cpp:100.)
+  return torch._C._cuda_getDeviceCount() &gt; 0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:openpifpaf.decoder.cifcaf:12 annotations: [14, 9, 6, 5, 3, 4, 5, 3, 4, 4, 4, 2]
 INFO:__main__:batch 0: coco/000000114907.jpg
 </pre></div>
 </div>
@@ -341,7 +357,11 @@ Image credit: <a class="reference external" href="https://www.flickr.com/photos/
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:openpifpaf.decoder.cifcaf:5 annotations: [15, 13, 10, 4, 2]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.7.9/x64/lib/python3.7/site-packages/torch/cuda/__init__.py:52: UserWarning: CUDA initialization: Found no NVIDIA driver on your system. Please check that you have an NVIDIA GPU and installed a driver from http://www.nvidia.com/Download/index.aspx (Triggered internally at  /pytorch/c10/cuda/CUDAFunctions.cpp:100.)
+  return torch._C._cuda_getDeviceCount() &gt; 0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:openpifpaf.decoder.cifcaf:5 annotations: [13, 13, 10, 3, 2]
 INFO:__main__:batch 0: coco/000000147740.jpg
 </pre></div>
 </div>
@@ -356,7 +376,11 @@ Image credit: <a class="reference external" href="https://www.flickr.com/photos/
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:openpifpaf.decoder.cifcaf:5 annotations: [17, 17, 16, 17, 7]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.7.9/x64/lib/python3.7/site-packages/torch/cuda/__init__.py:52: UserWarning: CUDA initialization: Found no NVIDIA driver on your system. Please check that you have an NVIDIA GPU and installed a driver from http://www.nvidia.com/Download/index.aspx (Triggered internally at  /pytorch/c10/cuda/CUDAFunctions.cpp:100.)
+  return torch._C._cuda_getDeviceCount() &gt; 0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:openpifpaf.decoder.cifcaf:5 annotations: [17, 17, 17, 14, 7]
 INFO:__main__:batch 0: coco/000000541055.jpg
 </pre></div>
 </div>
@@ -364,6 +388,99 @@ INFO:__main__:batch 0: coco/000000541055.jpg
 </div>
 <p><img alt="predicted" src="_images/000000541055.jpg.predictions.png" /><br />
 Image credit: <a class="reference external" href="https://www.flickr.com/photos/12407269&#64;N07/3465325303/">Photo</a> by Jarrod Doll shared under <a class="reference external" href="https://creativecommons.org/licenses/by/2.0/">CC-BY-2.0</a>.</p>
+<div class="section" id="debug-outputs">
+<h2>Debug Outputs<a class="headerlink" href="#debug-outputs" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>python -m openpifpaf.predict coco/000000541055_cropped.jpeg --image-output --debug-images --debug-indices cif:5 cifhr:5 caf:5 --save-all<span class="o">=</span>coco_debug_example --image-height<span class="o">=</span><span class="m">6</span> --image-min-dpi<span class="o">=</span><span class="m">200</span> --show-file-extension<span class="o">=</span>jpeg
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.7.9/x64/lib/python3.7/site-packages/torch/cuda/__init__.py:52: UserWarning: CUDA initialization: Found no NVIDIA driver on your system. Please check that you have an NVIDIA GPU and installed a driver from http://www.nvidia.com/Download/index.aspx (Triggered internally at  /pytorch/c10/cuda/CUDAFunctions.cpp:100.)
+  return torch._C._cuda_getDeviceCount() &gt; 0
+DEBUG:__main__:neural network device: cpu
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:openpifpaf.decoder.factory:head names = [&#39;cif&#39;, &#39;caf&#39;, &#39;caf25&#39;]
+DEBUG:openpifpaf.visualizer.base:cif: indices = [5]
+DEBUG:openpifpaf.show.painters:color connections = True, lw = 2, marker = 6
+DEBUG:openpifpaf.show.painters:color connections = False, lw = 6, marker = 3
+DEBUG:openpifpaf.visualizer.base:caf: indices = [5]
+DEBUG:openpifpaf.show.painters:color connections = True, lw = 2, marker = 6
+DEBUG:openpifpaf.show.painters:color connections = False, lw = 6, marker = 3
+DEBUG:openpifpaf.decoder.factory:created 1 decoders
+DEBUG:openpifpaf.show.painters:color connections = False, lw = 6, marker = 3
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:openpifpaf.transforms.pad:valid area before pad: [  0.   0. 369. 320.], image size = (370, 321)
+DEBUG:openpifpaf.transforms.pad:pad with (7, 0, 8, 0)
+DEBUG:openpifpaf.transforms.pad:valid area after pad: [  7.   0. 369. 320.], image size = (385, 321)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:openpifpaf.decoder.decoder:nn processing time: 0.259s
+DEBUG:openpifpaf.decoder.decoder:parallel execution with worker &lt;openpifpaf.decoder.decoder.DummyPool object at 0x7f5d5d85de90&gt;
+DEBUG:openpifpaf.decoder.multi:task 0
+DEBUG:openpifpaf.decoder.cifcaf:initial annotations = 0
+DEBUG:openpifpaf.visualizer.cif:left_shoulder
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:openpifpaf.show.canvas:writing image to coco_debug_example/0001.jpeg
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:openpifpaf.visualizer.cif:left_shoulder
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:openpifpaf.show.canvas:writing image to coco_debug_example/0002.jpeg
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:openpifpaf.visualizer.caf:left_shoulder,left_hip
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:openpifpaf.show.canvas:writing image to coco_debug_example/0003.jpeg
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:openpifpaf.visualizer.caf:left_shoulder,left_hip
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:openpifpaf.show.canvas:writing image to coco_debug_example/0004.jpeg
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:openpifpaf.decoder.utils.cif_hr:target_intensities 0.003s
+DEBUG:openpifpaf.visualizer.cifhr:5 (field name: unknown)
+DEBUG:openpifpaf.show.canvas:writing image to coco_debug_example/0005.jpeg
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:openpifpaf.decoder.utils.cif_seeds:seeds 904, 0.002s (C++ 0.000s)
+DEBUG:openpifpaf.decoder.utils.caf_scored:scored caf (1439, 1523) in 0.003s
+DEBUG:openpifpaf.decoder.utils.occupancy:shape = (17, 161, 193), min_scale = 2
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:openpifpaf.show.canvas:writing image to coco_debug_example/0006.jpeg
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:openpifpaf.decoder.cifcaf:annotations 5, 1.862s
+DEBUG:openpifpaf.decoder.utils.occupancy:shape = (17, 137, 164), min_scale = 2
+DEBUG:openpifpaf.decoder.utils.nms:nms = 0.003s
+INFO:openpifpaf.decoder.cifcaf:5 annotations: [17, 17, 17, 14, 7]
+DEBUG:openpifpaf.decoder.decoder:time: nn = 0.260s, dec = 1.867s
+INFO:__main__:batch 0: coco/000000541055_cropped.jpeg
+DEBUG:__main__:image output = coco/000000541055_cropped.jpeg.predictions.jpeg
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:openpifpaf.show.canvas:writing image to coco/000000541055_cropped.jpeg.predictions.jpeg
+</pre></div>
+</div>
+</div>
+</div>
+<p><img alt="CIF_c" src="_images/0001.jpeg" />
+<img alt="CIF_r" src="_images/0002.jpeg" />
+<img alt="CIF_hr" src="_images/0005.jpeg" />
+Image credit: <a class="reference external" href="https://www.flickr.com/photos/12407269&#64;N07/3465325303/">Photo</a> by Jarrod Doll shared under <a class="reference external" href="https://creativecommons.org/licenses/by/2.0/">CC-BY-2.0</a>.</p>
+<p><img alt="CAF_c" src="_images/0003.jpeg" />
+<img alt="CAF_r" src="_images/0004.jpeg" />
+Image credit: <a class="reference external" href="https://www.flickr.com/photos/12407269&#64;N07/3465325303/">Photo</a> by Jarrod Doll shared under <a class="reference external" href="https://creativecommons.org/licenses/by/2.0/">CC-BY-2.0</a>.</p>
+</div>
 </div>
 
     <script type="text/x-thebe-config">
