@@ -60,7 +60,11 @@ BASE_FACTORIES = {
     'squeezenet': lambda: basenetworks.SqueezeNet('squeezenet', torchvision.models.squeezenet1_1),
 }
 
-HEAD_TYPES = set([heads.CompositeField3, heads.DeepCompositeField3])
+HEAD_TYPES = {
+    heads.CompositeField3,
+    heads.DeepCompositeField3
+}
+
 HEAD_FACTORIES = {
     headmeta.Cif: heads.CompositeField3,
     headmeta.Caf: heads.CompositeField3,
