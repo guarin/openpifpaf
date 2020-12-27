@@ -135,6 +135,7 @@ class CompositeField3(HeadNetwork):
                   meta.name, meta.n_fields, meta.n_confidences, meta.n_vectors, meta.n_scales,
                   kernel_size, padding, dilation)
 
+        self.final_layer = meta.final_layer if hasattr(meta, 'final_layer') else 'sigmoid'
         self.dropout = torch.nn.Dropout2d(p=self.dropout_p)
 
         # convolution
@@ -200,7 +201,10 @@ class CompositeField3(HeadNetwork):
         if not self.training and self.inplace_ops:
             # classification
             classes_x = x[:, :, 0:self.meta.n_confidences]
-            torch.sigmoid_(classes_x)
+            if self.final_layer == 'sigmoid':
+                torch.sigmoid_(classes_x)
+            elif self.final_layer == 'softmax':
+                torch.softmax_(classes_x, 1)
 
             # regressions x: add index
             if self.meta.n_vectors > 0:
@@ -224,7 +228,10 @@ class CompositeField3(HeadNetwork):
 
             # classification
             classes_x = x[:, 0:self.meta.n_confidences]
-            classes_x = torch.sigmoid(classes_x)
+            if self.final_layer == 'sigmoid':
+                torch.sigmoid_(classes_x)
+            elif self.final_layer == 'softmax':
+                torch.softmax_(classes_x, 1)
 
             # regressions x
             first_reg_feature = self.meta.n_confidences

@@ -5,6 +5,51 @@ import torch
 
 LOG = logging.getLogger(__name__)
 
+class Ce(torch.nn.Module):
+    background_weight = 1.0
+    focal_gamma = 1.0
+
+    def __init__(self, *, detach_focal=False):
+        super().__init__()
+        self.detach_focal = detach_focal
+
+    @classmethod
+    def cli(cls, parser: argparse.ArgumentParser):
+        group = parser.add_argument_group('Cross Entropy Loss')
+        group.add_argument('--ce-background-weight', default=cls.background_weight, type=float,
+                           help='Cross Entropy weight where ground truth is background')
+        group.add_argument('--ce-focal-gamma', default=cls.focal_gamma, type=float,
+                           help='when > 0.0, use focal loss with the given gamma')
+
+    @classmethod
+    def configure(cls, args: argparse.Namespace):
+        cls.background_weight = args.background_weight
+        cls.focal_gamma = args.focal_gamma
+
+    def forward(self, x, t):  # pylint: disable=arguments-differ
+        t_zeroone = t.clone()
+        t_zeroone[t_zeroone > 0.0] = 1.0
+
+        ce = torch.nn.functional.cross_entropy(x, t_zeroone.argmax(1), reduction='none')
+        ce = torch.clamp_min(ce, 0.02)
+
+        if self.focal_gamma != 0.0:
+            pt = torch.exp(-ce)
+            focal = (1.0 - pt)**self.focal_gamma
+            if self.detach_focal:
+                focal = focal.detach()
+            ce = focal * ce
+
+        # weight_mask = t_zeroone != t
+        # ce[weight_mask] = ce[weight_mask] * t[weight_mask]
+        #
+        # if self.background_weight != 1.0:
+        #     bg_weight = torch.ones_like(t, requires_grad=False)
+        #     bg_weight[t == 0] *= self.background_weight
+        #     ce = ce * bg_weight
+
+        return ce
+
 
 class Bce(torch.nn.Module):
     background_weight = 1.0

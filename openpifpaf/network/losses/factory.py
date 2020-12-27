@@ -13,6 +13,7 @@ LOSSES = {
     headmeta.Caf: CompositeLoss,
     headmeta.CifDet: CompositeLoss,
 }
+
 LOSS_COMPONENTS = {
     components.Bce,
     components.SmoothL1,

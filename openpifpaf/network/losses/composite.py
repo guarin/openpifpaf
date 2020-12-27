@@ -20,7 +20,15 @@ class CompositeLoss(torch.nn.Module):
         LOG.debug('%s: n_vectors = %d, n_scales = %d',
                   head_net.meta.name, self.n_vectors, self.n_scales)
 
-        self.confidence_loss = components.Bce(detach_focal=True)
+        self.final_layer = 'sigmoid'
+        if hasattr(head_net.meta, 'final_layer'):
+            self.final_layer = head_net.meta.final_layer
+        if self.final_layer == 'sigmoid':
+            self.confidence_loss = components.Bce(detach_focal=True)
+        elif self.final_layer == 'softmax':
+            self.confidence_loss = components.Ce(detach_focal=True)
+
+
         self.regression_loss = regression_loss or components.laplace_loss
         self.scale_losses = torch.nn.ModuleList([
             components.ScaleLoss(self.b_scale, relative=True)
@@ -66,10 +74,16 @@ class CompositeLoss(torch.nn.Module):
 
         LOG.debug('BCE: x = %s, target = %s, mask = %s',
                   x_confidence.shape, t_confidence.shape, bce_masks.shape)
-        bce_target = torch.masked_select(t_confidence, bce_masks)
-        x_confidence = torch.masked_select(x_confidence, bce_masks)
-        ce_loss = self.confidence_loss(x_confidence, bce_target)
-        ce_loss = ce_loss.sum() / batch_size
+
+        if self.final_layer == 'sigmoid':
+            bce_target = torch.masked_select(t_confidence, bce_masks)
+            x_confidence = torch.masked_select(x_confidence, bce_masks)
+            ce_loss = self.confidence_loss(x_confidence, bce_target)
+            ce_loss = ce_loss.sum() / batch_size
+        elif self.final_layer == 'softmax':
+            ce_loss = self.confidence_loss(x_confidence, t_confidence)
+            ce_loss = torch.masked_select(ce_loss, ~torch.isnan(ce_loss))
+            ce_loss = ce_loss.sum() / batch_size
 
         return ce_loss
 

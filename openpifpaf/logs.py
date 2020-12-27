@@ -173,6 +173,8 @@ class Plots():
     def epoch_head(self, ax, field_name):
         field_names = self.field_names()
         last_five_y = []
+        min_y = np.inf
+        max_y = -np.inf
         for color_i, (data, label) in enumerate(zip(self.datas, self.labels)):
             color = matplotlib.cm.get_cmap('tab10')((color_i % 10 + 0.05) / 10)
             if field_name not in field_names[label]:
@@ -185,6 +187,8 @@ class Plots():
                 y = np.array([row.get('head_losses')[field_i]
                               for row in data['val-epoch']], dtype=np.float)
                 m = np.logical_not(np.isnan(y))
+                min_y = np.min([min_y, np.min(y[m])])
+                max_y = np.max([max_y, np.max(y[m])])
                 ax.plot(x[m], y[m], 'o-', color=color, markersize=2, label=label)
                 last_five_y.append(y[m][-5:])
 
@@ -193,6 +197,8 @@ class Plots():
                 y = np.array([row.get('head_losses')[field_i]
                               for row in data['train-epoch']], dtype=np.float)
                 m = np.logical_not(np.isnan(y))
+                min_y = np.min([min_y, np.min(y[m])])
+                max_y = np.max([max_y, np.max(y[m])])
                 ax.plot(x[m], y[m], 'x-', color=color, linestyle='dotted', markersize=2)
                 last_five_y.append(y[m][-5:])
 
@@ -202,7 +208,7 @@ class Plots():
         ax.set_ylabel(field_name)
         last_five_y = np.concatenate(last_five_y)
         if not self.share_y and last_five_y.shape[0]:
-            ax.set_ylim(np.min(last_five_y), np.max(last_five_y))
+            ax.set_ylim(min_y * 0.9, min(last_five_y[-1] * 2, max_y * 1.1))
         # ax.set_ylim(0.0, 1.0)
         # if min(y) > -0.1:
         #     ax.set_yscale('log', nonposy='clip')
