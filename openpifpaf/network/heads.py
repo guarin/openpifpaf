@@ -169,6 +169,9 @@ class CompositeField3(HeadNetwork):
         return [self.conv.weight]
 
     def forward(self, x):  # pylint: disable=arguments-differ
+        if not hasattr(self, 'final_layer'):
+            self.final_layer = 'sigmoid'
+
         x = self.dropout(x)
         x = self.conv(x)
         # upscale
