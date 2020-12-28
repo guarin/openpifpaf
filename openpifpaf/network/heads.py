@@ -207,7 +207,7 @@ class CompositeField3(HeadNetwork):
             if self.final_layer == 'sigmoid':
                 torch.sigmoid_(classes_x)
             elif self.final_layer == 'softmax':
-                torch.softmax_(classes_x, 1)
+                x[:, :, 0:self.meta.n_confidences] = torch.softmax(classes_x, 1)
 
             # regressions x: add index
             if self.meta.n_vectors > 0:
@@ -234,7 +234,7 @@ class CompositeField3(HeadNetwork):
             if self.final_layer == 'sigmoid':
                 torch.sigmoid_(classes_x)
             elif self.final_layer == 'softmax':
-                torch.softmax_(classes_x, 1)
+                x[:, :, 0:self.meta.n_confidences] = torch.softmax(classes_x, 1)
 
             # regressions x
             first_reg_feature = self.meta.n_confidences
