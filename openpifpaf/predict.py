@@ -189,6 +189,7 @@ def main():
                 LOG.debug('image output = %s', image_out_name)
                 with show.image_canvas(cpu_image, image_out_name) as ax:
                     annotation_painter.annotations(ax, pred)
+                    annotation_painter.paint(ax)
 
 
 if __name__ == '__main__':
